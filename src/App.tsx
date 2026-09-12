@@ -268,13 +268,17 @@ export default function App() {
           {game.camper && (
             <>
               <h3>Inspect systems</h3>
-              <div className="compact-buttons">
-                {game.camper.hud.map((system) => (
-                  <button key={system.id} disabled={busy} onClick={() => run("inspect", { systemId: system.id })}>
-                    Self-check {system.label} | Free / {duration(game.inspection.selfHours)}
-                  </button>
-                ))}
-              </div>
+              {game.inspection.selfAvailable ? (
+                <div className="compact-buttons">
+                  {game.camper.hud.map((system) => (
+                    <button key={system.id} disabled={busy} onClick={() => run("inspect", { systemId: system.id })}>
+                      Self-check {system.label} | Free / {duration(game.inspection.selfHours)}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="muted">{game.inspection.selfReason}</p>
+              )}
               <div className="button-row">
                 <button disabled={busy} onClick={() => run("technician-inspect")}>
                   Call technician | {money(game.inspection.technicianCostCents)} / {duration(game.inspection.technicianHours)}

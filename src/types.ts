@@ -113,7 +113,7 @@ export interface GameState {
   day: number;
   hour: number;
   player: { locationId: string; locationName: string; distanceUnit: "km" | "mi"; approachId: string; approachName: string; tools: string[]; perks: string[] };
-  inspection: { selfHours: number; technicianCostCents: number; technicianHours: number };
+  inspection: { selfHours: number; technicianCostCents: number; technicianHours: number; selfAvailable: boolean; selfReason: string | null };
   finances: MoneyState;
   towVehicle: { name: string; locationId: string; odometerKm: number };
   objective: string;

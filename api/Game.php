@@ -273,7 +273,12 @@ final class Game
                 'tools' => $state['player']['tools'],
                 'perks' => $state['player']['perks'],
             ],
-            'inspection' => $this->content['inspection'],
+            'inspection' => $this->content['inspection'] + [
+                'selfAvailable' => in_array('basic-toolkit', $state['player']['tools'], true),
+                'selfReason' => in_array('basic-toolkit', $state['player']['tools'], true)
+                    ? null
+                    : 'First-time owners need a technician for technical system checks.',
+            ],
             'finances' => $state['finances'] + ['totalDebtCents' => $totalDebt],
             'towVehicle' => $state['towVehicle'],
             'objective' => $this->objective($state),
@@ -363,6 +368,9 @@ final class Game
     private function inspect(array &$state, array $payload): array
     {
         $this->requireCamperTogether($state);
+        if (!in_array('basic-toolkit', $state['player']['tools'], true)) {
+            throw new GameRuleException('TECHNICIAN_REQUIRED', 'Your experience level requires a technician for technical system checks.');
+        }
         $systemId = (string) ($payload['systemId'] ?? '');
         $this->find($this->content['systems'], $systemId);
         $level = $state['camper']['inspectionLevels'][$systemId] ?? null;

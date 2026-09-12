@@ -8,8 +8,7 @@ dist-deploy/
 output/
 /Deploy/
 /Deploy.previous-*/
-/Decompile/
-/Playable/
+/Decompile/tools/
 /Drug Wars Underworld - Activated.zip
 /references/private/screenshots/
 /api/.database.php

@@ -33,6 +33,16 @@ try {
     $firstTimer = $game->initialState('first-timer');
     check($firstTimer['player']['tools'] === [], 'First-time owner must not receive repair tools.');
     check(in_array('roadside-coverage', $firstTimer['player']['perks'], true), 'First-time owner roadside coverage missing.');
+    check($game->publicView($firstTimer)['inspection']['selfAvailable'] === false, 'First-time owner must not be offered technical self-checks.');
+    $selfCheckBlocked = false;
+    try {
+        act($game, $firstTimer, 'inspect', ['systemId' => 'shell']);
+    } catch (GameRuleException) {
+        $selfCheckBlocked = true;
+    }
+    check($selfCheckBlocked, 'First-time owner self-check must be rejected by domain rules.');
+    $firstTimerTech = act($game, $firstTimer, 'technician-inspect');
+    check($firstTimerTech['finances']['cashCents'] === 138000, 'First-time owner technician inspection must cost G$120.');
 
     $state = $game->initialState('hands-on');
     check($state['day'] === 1, 'Campaign must start on Day 1.');
