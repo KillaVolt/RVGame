@@ -1,0 +1,154 @@
+{
+  "contentVersion": "simple-1.2.0",
+  "rulesetId": "simple-1",
+  "workingTitle": "RVGame",
+  "titleProvisional": true,
+  "currency": "G$",
+  "distanceUnit": "km",
+  "start": {
+    "day": 1,
+    "hour": 9,
+    "locationId": "sunset-shores",
+    "homeLocationId": "maple-junction",
+    "towVehicleName": "Bluebird",
+    "towVehicleOdometerKm": 126400,
+    "cashCents": 150000,
+    "loanPrincipalCents": 200000,
+    "starterPurchaseCents": 350000,
+    "starterCamperId": "rusty-lantern-19",
+    "dreamCamperId": "sunbeam-23",
+    "loadouts": [
+      {
+        "id": "first-timer",
+        "name": "First-time owner",
+        "tagline": "Bring roadside protection",
+        "description": "Pack warning triangles and safety supplies, and carry roadside coverage instead of repair tools.",
+        "equipment": ["Safety kit", "Roadside coverage"],
+        "benefit": "Commercial recovery adds only G$150 to payables. DIY repairs are unavailable.",
+        "tools": [],
+        "perks": ["roadside-coverage"]
+      },
+      {
+        "id": "hands-on",
+        "name": "Hands-on owner",
+        "tagline": "Bring a basic toolkit",
+        "description": "Pack sockets, screwdrivers, pliers, a tire gauge and a multimeter instead of roadside coverage.",
+        "equipment": ["Basic hand tools", "Tire gauge", "Multimeter"],
+        "benefit": "Eligible repairs can be completed yourself for time instead of a technician fee.",
+        "tools": ["basic-toolkit"],
+        "perks": []
+      }
+    ],
+    "briefCheckedSystems": ["running-gear", "shell"]
+  },
+  "inspection": {
+    "selfHours": 1,
+    "technicianCostCents": 12000,
+    "technicianHours": 4
+  },
+  "daily": {
+    "operatingCostCents": 1500,
+    "awayParkingCents": 2000,
+    "loanInterestBps": 20
+  },
+  "recovery": {
+    "payableCents": 30000,
+    "roadsidePayableCents": 15000,
+    "hours": 6
+  },
+  "work": {
+    "grossCents": 22000,
+    "hours": 8
+  },
+  "market": {
+    "waitHours": 4,
+    "saleHours": 2
+  },
+  "goal": {
+    "minimumReserveCents": 50000,
+    "minimumHudState": "LOOKS_OK",
+    "requiredSystems": ["running-gear", "shell", "plumbing"]
+  },
+  "locations": [
+    {"id": "sunset-shores", "name": "Sunset Shores", "x": 84, "y": 18, "service": true},
+    {"id": "pine-lake", "name": "Pine Lake", "x": 60, "y": 34, "service": true},
+    {"id": "cedar-ridge", "name": "Cedar Ridge", "x": 37, "y": 49, "service": false},
+    {"id": "maple-junction", "name": "Maple Junction", "x": 14, "y": 69, "service": true}
+  ],
+  "routes": [
+    {"id": "sunset-pine", "a": "sunset-shores", "b": "pine-lake", "distanceKm": 88, "towCostCents": 5400, "soloCostCents": 3900, "towHours": 2, "soloHours": 1},
+    {"id": "pine-cedar", "a": "pine-lake", "b": "cedar-ridge", "distanceKm": 72, "towCostCents": 4600, "soloCostCents": 3300, "towHours": 2, "soloHours": 1},
+    {"id": "cedar-maple", "a": "cedar-ridge", "b": "maple-junction", "distanceKm": 46, "towCostCents": 3600, "soloCostCents": 2600, "towHours": 1, "soloHours": 1}
+  ],
+  "systems": [
+    {"id": "running-gear", "label": "Running Gear and Towing"},
+    {"id": "shell", "label": "Roof, Body and Seals"},
+    {"id": "dc-12v", "label": "12V Battery and Charging"},
+    {"id": "ac-120v", "label": "120V Shore Power"},
+    {"id": "propane", "label": "Propane"},
+    {"id": "plumbing", "label": "Water and Plumbing"},
+    {"id": "comfort", "label": "Appliances and HVAC"},
+    {"id": "interior", "label": "Interior and Presentation"}
+  ],
+  "repairs": [
+    {"id": "preventive-tire-service", "label": "Preventive tire service", "systemId": "running-gear", "technicianCostCents": 7000, "technicianHours": 3, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
+    {"id": "roadside-tire-service", "label": "Roadside tire service", "systemId": "running-gear", "technicianCostCents": 9000, "technicianHours": 3, "diyAllowed": false, "diyHours": null, "serviceAnywhere": true},
+    {"id": "seal-refresh", "label": "Roof and seal refresh", "systemId": "shell", "technicianCostCents": 18000, "technicianHours": 4, "diyAllowed": true, "diyHours": 6, "serviceAnywhere": false},
+    {"id": "battery-service", "label": "Battery and charging service", "systemId": "dc-12v", "technicianCostCents": 26000, "technicianHours": 3, "diyAllowed": true, "diyHours": 4, "serviceAnywhere": false},
+    {"id": "shore-power-service", "label": "Shore power service", "systemId": "ac-120v", "technicianCostCents": 30000, "technicianHours": 4, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
+    {"id": "propane-service", "label": "Propane system service", "systemId": "propane", "technicianCostCents": 32000, "technicianHours": 4, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
+    {"id": "plumbing-service", "label": "Water system service", "systemId": "plumbing", "technicianCostCents": 22000, "technicianHours": 4, "diyAllowed": true, "diyHours": 6, "serviceAnywhere": false},
+    {"id": "comfort-service", "label": "Appliance and HVAC service", "systemId": "comfort", "technicianCostCents": 34000, "technicianHours": 5, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
+    {"id": "interior-refresh", "label": "Interior refresh", "systemId": "interior", "technicianCostCents": 12000, "technicianHours": 5, "diyAllowed": true, "diyHours": 8, "serviceAnywhere": false}
+  ],
+  "upgrades": [
+    {"id": "cozy-nook", "label": "Cozy nook package", "costCents": 25000, "valueCents": 15000, "hours": 6, "requiresSystemId": "interior"}
+  ],
+  "camperTemplates": [
+    {
+      "id": "rusty-lantern-19",
+      "name": "Rusty Lantern 19",
+      "askCents": 350000,
+      "soundValueCents": 500000,
+      "unlockAfterSales": 0,
+      "dream": false,
+      "defects": [
+        {"id": "uneven-tire-wear", "systemId": "running-gear", "severity": "major", "penaltyCents": 60000, "known": false, "inspectionTier": "technician", "towingBlockerAfterKm": 150},
+        {"id": "tired-roof-seals", "systemId": "shell", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "self"},
+        {"id": "weak-house-battery", "systemId": "dc-12v", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "technician"}
+      ]
+    },
+    {
+      "id": "pocket-pine-17",
+      "name": "Pocket Pine 17",
+      "askCents": 400000,
+      "soundValueCents": 720000,
+      "unlockAfterSales": 1,
+      "dream": false,
+      "defects": [
+        {"id": "window-seal-leak", "systemId": "shell", "severity": "major", "penaltyCents": 90000, "known": false, "inspectionTier": "self"},
+        {"id": "worn-upholstery", "systemId": "interior", "severity": "minor", "penaltyCents": 25000, "known": true, "inspectionTier": "self"}
+      ]
+    },
+    {
+      "id": "sunbeam-23",
+      "name": "Sunbeam 23",
+      "askCents": 500000,
+      "soundValueCents": 900000,
+      "unlockAfterSales": 2,
+      "dream": true,
+      "defects": [
+        {"id": "sticky-water-pump", "systemId": "plumbing", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "self"}
+      ]
+    }
+  ],
+  "buyers": [
+    {"id": "project-hunter", "name": "Project Hunter", "factorBps": 8200, "acceptsMajorDefects": true},
+    {"id": "weekend-buyer", "name": "Weekend Buyer", "factorBps": 10000, "acceptsMajorDefects": false}
+  ],
+  "events": [
+    {"id": "parts-tip", "label": "A neighboring camper shares a parts tip.", "cashDeltaCents": 4000},
+    {"id": "rain-check", "label": "Rain taps the roof but reveals no new damage.", "cashDeltaCents": 0},
+    {"id": "odd-job-tip", "label": "A campground host points out tomorrow's work board.", "cashDeltaCents": 0}
+  ]
+}

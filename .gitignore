@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-deploy/
+.env
+*.log
+.playwright/
+.playwright-cli/
+output/
+/Deploy/
+/Deploy.previous-*/
+/Decompile/
+/Playable/
+/Drug Wars Underworld - Activated.zip
+/references/private/screenshots/
+/api/.database.php

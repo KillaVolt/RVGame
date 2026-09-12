@@ -1,0 +1,3 @@
+<Files ".database.php">
+    Require all denied
+</Files>
