@@ -5,7 +5,7 @@ dist-deploy/
 *.log
 .playwright/
 .playwright-cli/
-output/
+/output/
 /Deploy/
 /Deploy.previous-*/
 /Decompile/tools/
