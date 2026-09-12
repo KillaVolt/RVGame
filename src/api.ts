@@ -1,4 +1,4 @@
-import type { ApiResponse, Bootstrap, GameState } from "./types";
+import type { ApiResponse, Bootstrap, CommunitySummary, GameState } from "./types";
 
 const endpoint = import.meta.env.DEV ? "/api" : "../api/index.php";
 
@@ -21,7 +21,23 @@ async function send(body?: object): Promise<ApiResponse> {
 
 export async function loadGame(): Promise<Bootstrap> {
   const response = await send();
-  return { state: response.state, setup: response.setup || [] };
+  return { state: response.state ?? null, setup: response.setup || [] };
+}
+
+export async function loadCommunity(): Promise<CommunitySummary> {
+  const community = (await send()).community;
+  if (!community) throw new Error("The server did not return community information.");
+  return community;
+}
+
+export async function rateGame(rating: number): Promise<CommunitySummary> {
+  const community = (await send({ action: "rate", rating })).community;
+  if (!community) throw new Error("The server did not save the rating.");
+  return community;
+}
+
+export async function submitFeedback(category: string, message: string, website: string): Promise<void> {
+  await send({ action: "feedback", category, message, website });
 }
 
 export async function newGame(loadoutId: string): Promise<GameState> {

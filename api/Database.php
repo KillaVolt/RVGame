@@ -55,14 +55,23 @@ final class Database
         ]);
     }
 
+    public static function channel(): string
+    {
+        $scriptName = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+        return preg_match('#/RVGame/OT(?:/|$)#i', $scriptName) === 1 ? 'ot' : 'main';
+    }
+
     public static function sessionId(PDO $pdo): int
     {
-        $token = $_COOKIE['rvgame_session'] ?? '';
+        $channel = self::channel();
+        $cookieName = $channel === 'ot' ? 'rvgame_ot_session' : 'rvgame_session';
+        $cookiePath = $channel === 'ot' ? '/RVGame/OT' : '/RVGame';
+        $token = $_COOKIE[$cookieName] ?? '';
         if (!is_string($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
             $token = bin2hex(random_bytes(32));
-            setcookie('rvgame_session', $token, [
+            setcookie($cookieName, $token, [
                 'expires' => time() + 31536000,
-                'path' => '/RVGame',
+                'path' => $cookiePath,
                 'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
                 'httponly' => true,
                 'samesite' => 'Strict',
@@ -70,13 +79,13 @@ final class Database
         }
 
         $hash = hash('sha256', $token, true);
-        $select = $pdo->prepare('SELECT id FROM rvgame_sessions WHERE token_hash = ?');
-        $select->execute([$hash]);
+        $select = $pdo->prepare('SELECT id FROM rvgame_sessions WHERE channel = ? AND token_hash = ?');
+        $select->execute([$channel, $hash]);
         $id = $select->fetchColumn();
 
         if ($id === false) {
-            $insert = $pdo->prepare('INSERT INTO rvgame_sessions (token_hash) VALUES (?)');
-            $insert->execute([$hash]);
+            $insert = $pdo->prepare('INSERT INTO rvgame_sessions (channel, token_hash) VALUES (?, ?)');
+            $insert->execute([$channel, $hash]);
             return (int) $pdo->lastInsertId();
         }
 

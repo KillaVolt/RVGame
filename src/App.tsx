@@ -297,7 +297,11 @@ export default function App() {
                 </article>
               ))}
               {game.repairs.every((repair) => repair.diyReason === "No matching known issue." && repair.technicianReason === "No matching known issue.") && (
-                <p className="muted">Self-check systems for obvious issues or pay a technician for a deeper inspection.</p>
+                <p className="muted">
+                  {game.inspection.selfAvailable
+                    ? "Self-check systems for obvious issues or pay a technician for a deeper inspection."
+                    : "Pay a technician for a technical inspection before choosing repairs."}
+                </p>
               )}
               {game.atGarageWithCamper ? (
                 <>

@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS rvgame_sessions (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     token_hash BINARY(32) NOT NULL,
+    channel VARCHAR(10) NOT NULL DEFAULT 'main',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
@@ -32,4 +33,26 @@ CREATE TABLE IF NOT EXISTS rvgame_command_receipts (
     KEY ix_receipts_campaign (campaign_id),
     CONSTRAINT fk_rvgame_receipts_campaign FOREIGN KEY (campaign_id) REFERENCES rvgame_campaigns(id) ON DELETE CASCADE,
     CONSTRAINT ck_rvgame_receipts_response_json CHECK (JSON_VALID(response_json))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS rvgame_ratings (
+    session_id BIGINT UNSIGNED NOT NULL,
+    rating TINYINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (session_id),
+    CONSTRAINT fk_rvgame_ratings_session FOREIGN KEY (session_id) REFERENCES rvgame_sessions(id) ON DELETE CASCADE,
+    CONSTRAINT ck_rvgame_ratings_value CHECK (rating BETWEEN 1 AND 5)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS rvgame_feedback (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    session_id BIGINT UNSIGNED NOT NULL,
+    category VARCHAR(10) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY ix_rvgame_feedback_session_created (session_id, created_at),
+    CONSTRAINT fk_rvgame_feedback_session FOREIGN KEY (session_id) REFERENCES rvgame_sessions(id) ON DELETE CASCADE,
+    CONSTRAINT ck_rvgame_feedback_category CHECK (category IN ('bug', 'idea', 'other'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

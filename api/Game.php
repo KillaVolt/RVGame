@@ -11,7 +11,7 @@ final class GameRuleException extends RuntimeException
 
 final class Game
 {
-    private const BUILD_ID = 'rvgame-0.3.0';
+    private const BUILD_ID = 'rvgame-0.4.0';
     private const SCHEMA_VERSION = 2;
     private array $content;
 

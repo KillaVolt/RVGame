@@ -140,11 +140,18 @@ export interface GameState {
 
 export interface ApiResponse {
   ok: boolean;
-  state: GameState | null;
+  state?: GameState | null;
   setup?: StartOption[];
+  community?: CommunitySummary;
   result?: { summary: string };
   duplicate?: boolean;
   error?: { code: string; message: string };
+}
+
+export interface CommunitySummary {
+  averageRating: number | null;
+  ratingCount: number;
+  userRating: number | null;
 }
 
 export interface Bootstrap {

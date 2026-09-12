@@ -14,9 +14,32 @@ function respond(array $payload, int $status = 200): never
     exit;
 }
 
+function communityView(PDO $pdo, int $sessionId, string $channel): array
+{
+    $summary = $pdo->prepare(
+        'SELECT ROUND(AVG(r.rating), 1) AS average_rating, COUNT(*) AS rating_count
+         FROM rvgame_ratings r
+         INNER JOIN rvgame_sessions s ON s.id = r.session_id
+         WHERE s.channel = ?'
+    );
+    $summary->execute([$channel]);
+    $totals = $summary->fetch();
+
+    $own = $pdo->prepare('SELECT rating FROM rvgame_ratings WHERE session_id = ?');
+    $own->execute([$sessionId]);
+    $ownRating = $own->fetchColumn();
+
+    return [
+        'averageRating' => $totals['average_rating'] === null ? null : (float) $totals['average_rating'],
+        'ratingCount' => (int) $totals['rating_count'],
+        'userRating' => $ownRating === false ? null : (int) $ownRating,
+    ];
+}
+
 try {
     $pdo = Database::connect();
     $sessionId = Database::sessionId($pdo);
+    $channel = Database::channel();
     $game = new Game(dirname(__DIR__) . '/content/simple-mode.json');
 
     $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -28,6 +51,7 @@ try {
             'ok' => true,
             'state' => $raw === false ? null : $game->publicView(json_decode((string) $raw, true, flags: JSON_THROW_ON_ERROR)),
             'setup' => $game->startOptions(),
+            'community' => communityView($pdo, $sessionId, $channel),
         ]);
     }
 
@@ -40,6 +64,36 @@ try {
     $rawBody = file_get_contents('php://input');
     $request = json_decode($rawBody === false ? '' : $rawBody, true, flags: JSON_THROW_ON_ERROR);
     $action = $request['action'] ?? '';
+
+    if ($action === 'rate') {
+        $rating = $request['rating'] ?? null;
+        if (!is_int($rating) || $rating < 1 || $rating > 5) {
+            respond(['ok' => false, 'error' => ['code' => 'INVALID_RATING', 'message' => 'Choose a rating from 1 to 5.']], 422);
+        }
+        $saveRating = $pdo->prepare(
+            'INSERT INTO rvgame_ratings (session_id, rating) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE rating = ?, updated_at = CURRENT_TIMESTAMP'
+        );
+        $saveRating->execute([$sessionId, $rating, $rating]);
+        respond(['ok' => true, 'community' => communityView($pdo, $sessionId, $channel)]);
+    }
+
+    if ($action === 'feedback') {
+        $category = (string) ($request['category'] ?? '');
+        $message = trim((string) ($request['message'] ?? ''));
+        $website = trim((string) ($request['website'] ?? ''));
+        if (!in_array($category, ['bug', 'idea', 'other'], true) || strlen($message) < 3 || strlen($message) > 2000 || $website !== '') {
+            respond(['ok' => false, 'error' => ['code' => 'INVALID_FEEDBACK', 'message' => 'Choose a type and enter 3 to 2,000 characters.']], 422);
+        }
+        $recent = $pdo->prepare('SELECT COUNT(*) FROM rvgame_feedback WHERE session_id = ? AND created_at >= CURRENT_DATE');
+        $recent->execute([$sessionId]);
+        if ((int) $recent->fetchColumn() >= 3) {
+            respond(['ok' => false, 'error' => ['code' => 'FEEDBACK_LIMIT', 'message' => 'Three messages per day is the limit. Please try again tomorrow.']], 429);
+        }
+        $saveFeedback = $pdo->prepare('INSERT INTO rvgame_feedback (session_id, category, message) VALUES (?, ?, ?)');
+        $saveFeedback->execute([$sessionId, $category, $message]);
+        respond(['ok' => true, 'community' => communityView($pdo, $sessionId, $channel)]);
+    }
 
     if ($action === 'new') {
         $query = $pdo->prepare('SELECT state_json FROM rvgame_campaigns WHERE session_id = ?');

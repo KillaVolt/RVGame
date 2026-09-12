@@ -24,7 +24,7 @@
         "tagline": "Bring roadside protection",
         "description": "Pack warning triangles and safety supplies, and carry roadside coverage instead of repair tools.",
         "equipment": ["Safety kit", "Roadside coverage"],
-        "benefit": "Commercial recovery adds only G$150 to payables. DIY repairs are unavailable.",
+        "benefit": "Commercial recovery adds only G$150 to payables. Technical self-checks and DIY repairs are unavailable; use paid technicians.",
         "tools": [],
         "perks": ["roadside-coverage"]
       },

@@ -2,7 +2,7 @@
 
 Provisional-title fresh build of Anthony's camper-reseller game.
 
-The player starts after paying for an already-purchased financed fixer-upper at Sunset Shores. A brief self-check found nothing obvious and the seller is gone. The player first chooses roadside protection or a basic toolkit, then can leave, perform free one-hour self-checks, or pay for a deeper technician inspection before towing home. The compact dashboard uses a live route graph and a 24-hour clock; garage upgrades and selling remain unavailable until the camper is home.
+The player starts after paying for an already-purchased financed fixer-upper at Sunset Shores. A brief self-check found nothing obvious and the seller is gone. The player first chooses roadside protection or a basic toolkit. Hands-on owners can spend time on basic self-checks; first-time owners pay a technician for technical inspection. The compact dashboard uses a live route graph and a 24-hour clock; garage upgrades and selling remain unavailable until the camper is home.
 
 ## Stack
 
@@ -17,6 +17,7 @@ No old game code or old-save compatibility is included.
 
 - Full working repository: E:\RVGame
 - HostGator runtime staging only: E:\RVGame\Deploy
+- Deployment helpers: E:\RVGame\scripts
 - XAMPP web path: E:\xampp8\htdocs\RVGame (junction to the working repository)
 
 ## Local setup
@@ -36,3 +37,10 @@ For Vite development, run npm.cmd run dev and open http://localhost:5173.
 - Playwright CLI against the XAMPP URL
 
 See reports/BUILD_STATUS.md for evidence. A green frontend build does not prove database, API, persistence, or browser gameplay.
+
+## Live deployment channels
+
+- `deploy live` means Owner Test at `/RVGame/OT/`.
+- Owner Test uses a separate cookie and channel-tagged save rows.
+- `final deploy` is the only instruction that may update `/RVGame/`.
+- Ratings and short feedback are separated by channel; no email address is requested.
