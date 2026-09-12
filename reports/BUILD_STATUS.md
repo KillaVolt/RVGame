@@ -19,7 +19,7 @@ Prepared: 2026-09-12
 | Responsive width | NOT RUN | New clock layout requires desktop and 360 px recheck |
 | Package links | PASS | 25 links checked, zero missing |
 
-## Current rvgame-0.4.0 evidence
+## Current rvgame-0.4.1 evidence
 
 - E:\xampp8\php\php.exe tests\domain.php: PASS
 - E:\xampp8\php\php.exe tests\channel.php: PASS
@@ -29,6 +29,8 @@ Prepared: 2026-09-12
 - HostGator Owner Test deployment: PASS at https://starlightrv.ca/RVGame/OT/
 - HostGator production deployment from the same staged artifact: PASS at https://starlightrv.ca/RVGame/
 - Main and Owner Test saves, ratings, and feedback were explicitly reset before release verification.
+- Feedback Close works with an empty required message field in Owner Test and production.
+- Share uses the standard icon and exposes Facebook, X, Bluesky, Reddit, email, native apps, and copy-link actions.
 
 ## Not run
 
