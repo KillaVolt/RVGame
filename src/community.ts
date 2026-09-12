@@ -10,7 +10,7 @@ const dialog = document.createElement('dialog');
 dialog.className = 'rvgame-community-dialog';
 dialog.innerHTML = `
   <form method="dialog" class="rvgame-community-card">
-    <button class="rvgame-community-close" value="close" aria-label="Close">Close</button>
+    <button type="button" class="rvgame-community-close" aria-label="Close">Close</button>
     <p class="rvgame-community-kicker">Help shape RVGame</p>
     <h2>Rate it or leave a quick note</h2>
     <p class="rvgame-rating-summary" aria-live="polite">Loading ratings...</p>
@@ -59,6 +59,8 @@ const summary = dialog.querySelector('.rvgame-rating-summary') as HTMLParagraphE
 const ratingButtons = dialog.querySelector('.rvgame-rating-buttons') as HTMLDivElement;
 const status = dialog.querySelector('.rvgame-community-status') as HTMLParagraphElement;
 let loaded = false;
+
+dialog.querySelector('.rvgame-community-close')?.addEventListener('click', () => dialog.close());
 
 function renderRatings(data: CommunitySummary): void {
   summary.textContent = data.ratingCount === 0
