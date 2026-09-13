@@ -154,6 +154,7 @@ export default function App() {
           </fieldset>
           <button onClick={start} disabled={busy || !loadoutId || resetRequired !== null}>Take ownership of the fixer-upper</button>
           {error && <p className="error" role="alert">{error}</p>}
+          <a className="source-link" href="https://github.com/KillaVolt/RVGame" target="_blank" rel="noreferrer">Source · AGPL-3.0-only</a>
         </div>
       </main>
     );
@@ -172,6 +173,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <a className="source-link" href="https://github.com/KillaVolt/RVGame" target="_blank" rel="noreferrer">Source · AGPL-3.0-only</a>
       <header className="status-strip">
         <div className="brand">
           <span className="tiny">Provisional title</span>

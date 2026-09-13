@@ -38,6 +38,10 @@ For Vite development, run npm.cmd run dev and open http://localhost:5173.
 
 See reports/BUILD_STATUS.md for evidence. A green frontend build does not prove database, API, persistence, or browser gameplay.
 
+## License
+
+RVGame is free software licensed under the GNU Affero General Public License version 3 only. See [LICENSE](LICENSE).
+
 ## Live deployment channels
 
 - `deploy live` means Owner Test at `/RVGame/OT/`.
