@@ -18,5 +18,8 @@ final class SchemaInstaller
         if ($channel === false) {
             $pdo->exec("ALTER TABLE rvgame_sessions ADD channel VARCHAR(10) NOT NULL DEFAULT 'main' AFTER token_hash");
         }
+        if ($pdo->query("SHOW COLUMNS FROM rvgame_sessions LIKE 'analytics_excluded'")->fetchColumn() === false) {
+            $pdo->exec('ALTER TABLE rvgame_sessions ADD analytics_excluded TINYINT(1) NOT NULL DEFAULT 0 AFTER channel');
+        }
     }
 }

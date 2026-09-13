@@ -2,7 +2,7 @@
 
 Provisional-title fresh build of Anthony's camper-reseller game.
 
-The player starts after paying for an already-purchased financed fixer-upper at Sunset Shores. A brief self-check found nothing obvious and the seller is gone. The player first chooses roadside protection or a basic toolkit. Hands-on owners can spend time on basic self-checks; first-time owners pay a technician for technical inspection. The compact dashboard uses a live route graph and a 24-hour clock; garage upgrades and selling remain unavailable until the camper is home.
+The player starts after paying for an already-purchased financed fixer-upper at Sunset Shores. A brief self-check found nothing obvious and the seller is gone. The player first chooses roadside protection or a basic toolkit. Hands-on owners can spend time on basic self-checks; first-time owners pay a technician for technical inspection. The compact dashboard combines the 24-hour clock, weight and tanks, durable events, regional routes and services, persistent listings, paid market information, buyer offers, debt, resale, and the dream-camper ending.
 
 ## Stack
 

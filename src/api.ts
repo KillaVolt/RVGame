@@ -21,7 +21,7 @@ async function send(body?: object): Promise<ApiResponse> {
 
 export async function loadGame(): Promise<Bootstrap> {
   const response = await send();
-  return { state: response.state ?? null, setup: response.setup || [] };
+  return { state: response.state ?? null, setup: response.setup || [], resetRequired: response.resetRequired ?? null };
 }
 
 export async function loadCommunity(): Promise<CommunitySummary> {

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RVGame Source of Truth</title>
+  <style>
+    :root { --ink:#17251f; --pine:#244b3b; --rust:#a64c32; --paper:#f5edda; --cream:#fffaf0; --line:#b8aa8c; --amber:#e4a62a; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:repeating-linear-gradient(135deg,#dce7da 0 24px,#d5e1d2 24px 48px); font-family:"Aptos Narrow","Franklin Gothic Medium",sans-serif; }
+    header { padding:28px clamp(20px,5vw,70px); color:var(--cream); background:linear-gradient(115deg,#17382c,#315944 68%,#8d432f); border-bottom:6px solid var(--amber); }
+    h1,h2 { margin:0; font-family:Rockwell,"Roboto Slab",serif; }
+    h1 { font-size:clamp(2rem,6vw,4.8rem); letter-spacing:-.04em; }
+    header p { max-width:850px; margin:10px 0 0; font-size:1.1rem; line-height:1.5; }
+    .stamp { display:inline-block; margin-bottom:12px; padding:5px 9px; color:var(--ink); background:var(--amber); font-weight:800; text-transform:uppercase; letter-spacing:.09em; }
+    main { width:min(1180px,calc(100% - 28px)); margin:22px auto 48px; display:grid; grid-template-columns:1.2fr .8fr; gap:18px; }
+    section { background:rgba(255,250,240,.96); border:1px solid var(--line); box-shadow:7px 7px 0 rgba(23,37,31,.14); }
+    section h2 { padding:13px 16px; color:var(--cream); background:var(--pine); font-size:1.15rem; }
+    .body { padding:14px 16px 17px; }
+    .lead { grid-column:1/-1; }
+    .lead .body { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+    .metric { padding:12px; background:#eee2c8; border-left:5px solid var(--rust); }
+    .metric b { display:block; font-size:1.2rem; }
+    ul { margin:0; padding:0; list-style:none; }
+    li + li { border-top:1px dashed var(--line); }
+    a { display:block; padding:10px 8px; color:#17382c; font-weight:800; text-decoration:none; }
+    a:hover,a:focus { color:var(--rust); background:#f2e5c8; outline:2px solid var(--amber); outline-offset:-2px; }
+    a span { display:block; margin-top:3px; color:#53645c; font-size:.88rem; font-weight:500; }
+    code { color:#6f2c20; overflow-wrap:anywhere; }
+    .warning { border-left:7px solid var(--rust); }
+    .wide { grid-column:1/-1; }
+    footer { padding:16px; text-align:center; color:#526159; }
+    @media (max-width:760px) { main { grid-template-columns:1fr; } .lead,.wide { grid-column:auto; } .lead .body { grid-template-columns:1fr 1fr; } }
+    @media (max-width:430px) { .lead .body { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="stamp">Canonical package / 2026-09-12</div>
+    <h1>RVGame</h1>
+    <p>Fresh source of truth for Anthony's Drug Wars-inspired camper-reseller game. RVGame is the provisional working title. This package separates intended rules, current implementation evidence, private behavioral reference, and future simulation.</p>
+  </header>
+  <main>
+    <section class="lead">
+      <h2>Authority at a glance</h2>
+      <div class="body">
+        <div class="metric"><b>Simple first</b>Complete reseller loop</div>
+        <div class="metric"><b>One rules path</b>PHP + MariaDB</div>
+        <div class="metric"><b>Canonical units</b>cents / km / kg / liters</div>
+        <div class="metric"><b>Private reference</b>Never a public asset</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Start here</h2>
+      <div class="body"><ul>
+        <li><a href="README.md">README<span>Purpose, reading order, and core boundary.</span></a></li>
+        <li><a href="AUTHORITY.md">Authority<span>Precedence, canonical paths, and non-negotiable rules.</span></a></li>
+        <li><a href="IMPLEMENTATION_STATUS.md">Implementation status<span>What is deployed, partially proven, or only specified.</span></a></li>
+        <li><a href="KNOWN_UNKNOWNS.md">Known unknowns<span>Decisions Codex must not invent.</span></a></li>
+      </ul></div>
+    </section>
+
+    <section>
+      <h2>Game</h2>
+      <div class="body"><ul>
+        <li><a href="GAME_DESIGN.md">Game design<span>Product promise, opening, loop, time, money, and movement.</span></a></li>
+        <li><a href="SIMPLE_MODE.md">Simple mode<span>Complete MVP including expertise, weight, events, market, and ending.</span></a></li>
+        <li><a href="FULL_MODE.md">Full mode<span>Deferred subsystem, wear, repair, and Unity boundaries.</span></a></li>
+        <li><a href="UI_DASHBOARD.md">Dashboard and interaction<span>Dense original UI, live map, status, actions, and accessibility.</span></a></li>
+      </ul></div>
+    </section>
+
+    <section>
+      <h2>Engineering and delivery</h2>
+      <div class="body"><ul>
+        <li><a href="ARCHITECTURE_AND_DATA.md">Architecture and data<span>Owners, commands, state, units, persistence, and portability.</span></a></li>
+        <li><a href="OWNER_ANALYTICS.md">Owner analytics<span>Private dashboard, metrics, access control, and privacy boundaries.</span></a></li>
+        <li><a href="GAP_MAP_AND_ROADMAP.md">Gap map and roadmap<span>Current comparison, priorities, and rejected complexity.</span></a></li>
+        <li><a href="ACCEPTANCE_TESTS.md">Acceptance tests<span>Concrete package, gameplay, browser, and release proof.</span></a></li>
+        <li><a href="BUILD_RUN_DEPLOY.md">Build, run, deploy<span>Local workflow, OT-first policy, save handling, and clean URL.</span></a></li>
+        <li><a href="CODEX_BUILD_PROMPT.md">Codex build prompt<span>One self-contained execution instruction.</span></a></li>
+      </ul></div>
+    </section>
+
+    <section>
+      <h2>Analysis and provenance</h2>
+      <div class="body"><ul>
+        <li><a href="DRUG_WARS_REFERENCE_ANALYSIS.md">Underworld analysis<span>Static behavioral findings and lawful RVGame mappings.</span></a></li>
+        <li><a href="SUPERSESSION_AND_SOURCES.md">Supersession and sources<span>What was reviewed, retained, rejected, and preserved.</span></a></li>
+        <li><a href="../Decompile/drug-wars-underworld-re/output/RVGAME_STATIC_ANALYSIS.md">Detailed static analysis<span>Private evidence report outside the design authority.</span></a></li>
+        <li><a href="../references/private/README.md">Private visual references<span>Information hierarchy notes; not deployable assets.</span></a></li>
+        <li><a href="../content/simple-mode.json">Executable Simple content<span>Only runtime owner of exact implemented values.</span></a></li>
+        <li><a href="../reports/BUILD_STATUS.md">Runtime build report<span>Repository evidence; never a requirement source.</span></a></li>
+      </ul></div>
+    </section>
+
+    <section class="wide warning">
+      <h2>Historical packages are not authority</h2>
+      <div class="body">The reviewed folders under <code>E:\Games Family\RV_Tech_Codex_Package*</code> remain preserved, but this SourceOfTruth supersedes them. Do not merge their old names, modes, day model, storage plan, schemas, or balance back into RVGame.</div>
+    </section>
+  </main>
+  <footer>RVGame is provisional. Private reference material stays private and outside deployment.</footer>
+</body>
+</html>

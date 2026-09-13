@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/Database.php';
 require __DIR__ . '/Game.php';
+require __DIR__ . '/Analytics.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -20,7 +21,7 @@ function communityView(PDO $pdo, int $sessionId, string $channel): array
         'SELECT ROUND(AVG(r.rating), 1) AS average_rating, COUNT(*) AS rating_count
          FROM rvgame_ratings r
          INNER JOIN rvgame_sessions s ON s.id = r.session_id
-         WHERE s.channel = ?'
+         WHERE s.channel = ? AND s.analytics_excluded = 0'
     );
     $summary->execute([$channel]);
     $totals = $summary->fetch();
@@ -33,6 +34,7 @@ function communityView(PDO $pdo, int $sessionId, string $channel): array
         'averageRating' => $totals['average_rating'] === null ? null : (float) $totals['average_rating'],
         'ratingCount' => (int) $totals['rating_count'],
         'userRating' => $ownRating === false ? null : (int) $ownRating,
+        'ownerExcluded' => Database::analyticsExcluded($pdo, $sessionId),
     ];
 }
 
@@ -44,13 +46,25 @@ try {
 
     $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
     if ($method === 'GET') {
+        Analytics::touch($pdo, $sessionId, $channel);
         $query = $pdo->prepare('SELECT state_json FROM rvgame_campaigns WHERE session_id = ?');
         $query->execute([$sessionId]);
         $raw = $query->fetchColumn();
+        $publicState = null;
+        $resetRequired = null;
+        if ($raw !== false) {
+            try {
+                $publicState = $game->publicView(json_decode((string) $raw, true, flags: JSON_THROW_ON_ERROR));
+            } catch (GameRuleException $error) {
+                if ($error->ruleCode !== 'SAVE_VERSION_UNSUPPORTED') throw $error;
+                $resetRequired = ['message' => $error->getMessage()];
+            }
+        }
         respond([
             'ok' => true,
-            'state' => $raw === false ? null : $game->publicView(json_decode((string) $raw, true, flags: JSON_THROW_ON_ERROR)),
+            'state' => $publicState,
             'setup' => $game->startOptions(),
+            'resetRequired' => $resetRequired,
             'community' => communityView($pdo, $sessionId, $channel),
         ]);
     }
@@ -65,16 +79,23 @@ try {
     $request = json_decode($rawBody === false ? '' : $rawBody, true, flags: JSON_THROW_ON_ERROR);
     $action = $request['action'] ?? '';
 
+    if (in_array($action, ['rate', 'feedback'], true) && Database::analyticsExcluded($pdo, $sessionId)) {
+        respond(['ok' => false, 'error' => ['code' => 'OWNER_EXCLUDED', 'message' => 'Owner testing is excluded. Your ratings and feedback are not recorded.']], 422);
+    }
+
     if ($action === 'rate') {
         $rating = $request['rating'] ?? null;
         if (!is_int($rating) || $rating < 1 || $rating > 5) {
             respond(['ok' => false, 'error' => ['code' => 'INVALID_RATING', 'message' => 'Choose a rating from 1 to 5.']], 422);
         }
+        $pdo->beginTransaction();
         $saveRating = $pdo->prepare(
             'INSERT INTO rvgame_ratings (session_id, rating) VALUES (?, ?)
              ON DUPLICATE KEY UPDATE rating = ?, updated_at = CURRENT_TIMESTAMP'
         );
         $saveRating->execute([$sessionId, $rating, $rating]);
+        Analytics::recordEvent($pdo, $sessionId, $channel, 'rating', null, $rating);
+        $pdo->commit();
         respond(['ok' => true, 'community' => communityView($pdo, $sessionId, $channel)]);
     }
 
@@ -90,8 +111,11 @@ try {
         if ((int) $recent->fetchColumn() >= 3) {
             respond(['ok' => false, 'error' => ['code' => 'FEEDBACK_LIMIT', 'message' => 'Three messages per day is the limit. Please try again tomorrow.']], 429);
         }
+        $pdo->beginTransaction();
         $saveFeedback = $pdo->prepare('INSERT INTO rvgame_feedback (session_id, category, message) VALUES (?, ?, ?)');
         $saveFeedback->execute([$sessionId, $category, $message]);
+        Analytics::recordEvent($pdo, $sessionId, $channel, 'feedback_' . $category);
+        $pdo->commit();
         respond(['ok' => true, 'community' => communityView($pdo, $sessionId, $channel)]);
     }
 
@@ -104,6 +128,7 @@ try {
             respond(['ok' => true, 'state' => $game->publicView($state)]);
         }
         $state = $game->initialState((string) ($request['loadoutId'] ?? ''));
+        $pdo->beginTransaction();
         $insert = $pdo->prepare('INSERT INTO rvgame_campaigns (id, session_id, ruleset_id, revision, status, state_json) VALUES (?, ?, ?, ?, ?, ?)');
         $insert->execute([
             $state['campaignId'],
@@ -113,6 +138,8 @@ try {
             $state['status'],
             json_encode($state, JSON_THROW_ON_ERROR),
         ]);
+        Analytics::recordEvent($pdo, $sessionId, $channel, 'campaign_start', $state['campaignId']);
+        $pdo->commit();
         respond(['ok' => true, 'state' => $game->publicView($state)]);
     }
 
@@ -178,6 +205,8 @@ try {
     $update->execute([$state['revision'], $state['status'], json_encode($state, JSON_THROW_ON_ERROR), $campaign['id']]);
     $receiptInsert = $pdo->prepare('INSERT INTO rvgame_command_receipts (command_id, campaign_id, request_hash, response_json) VALUES (?, ?, ?, ?)');
     $receiptInsert->execute([$commandId, $campaign['id'], $requestHash, json_encode($response, JSON_THROW_ON_ERROR)]);
+    $analyticsEvent = 'command_' . substr(preg_replace('/[^a-z0-9_]/', '_', strtolower($type)) ?? 'unknown', 0, 52);
+    Analytics::recordEvent($pdo, $sessionId, $channel, $analyticsEvent, $campaign['id']);
     $pdo->commit();
     respond($response);
 } catch (GameRuleException $error) {

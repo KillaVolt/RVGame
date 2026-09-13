@@ -1,3 +1,8 @@
 Options -Indexes
 DirectoryIndex index.php
 
+RewriteEngine On
+RewriteCond %{THE_REQUEST} \s/+RVGame/OT/dist(?:/index\.html)?/?(?:[?\s]) [NC]
+RewriteRule ^dist(?:/index\.html)?/?$ /RVGame/OT/ [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+RVGame/dist(?:/index\.html)?/?(?:[?\s]) [NC]
+RewriteRule ^dist(?:/index\.html)?/?$ /RVGame/ [R=302,L]

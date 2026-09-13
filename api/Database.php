@@ -79,18 +79,79 @@ final class Database
         }
 
         $hash = hash('sha256', $token, true);
-        $select = $pdo->prepare('SELECT id FROM rvgame_sessions WHERE channel = ? AND token_hash = ?');
+        $select = $pdo->prepare('SELECT id, analytics_excluded FROM rvgame_sessions WHERE channel = ? AND token_hash = ?');
         $select->execute([$channel, $hash]);
-        $id = $select->fetchColumn();
+        $session = $select->fetch();
+        $browserExcluded = ($_COOKIE['rvgame_owner_testing'] ?? '') === '1';
 
-        if ($id === false) {
-            $insert = $pdo->prepare('INSERT INTO rvgame_sessions (channel, token_hash) VALUES (?, ?)');
-            $insert->execute([$channel, $hash]);
+        if ($session === false) {
+            $insert = $pdo->prepare('INSERT INTO rvgame_sessions (channel, token_hash, analytics_excluded) VALUES (?, ?, ?)');
+            $insert->execute([$channel, $hash, $browserExcluded ? 1 : 0]);
             return (int) $pdo->lastInsertId();
         }
 
+        $id = (int) $session['id'];
+        if ($browserExcluded && !(bool) $session['analytics_excluded']) self::excludeSession($pdo, $id);
+        if ($browserExcluded || (bool) $session['analytics_excluded']) self::markBrowserExcluded();
         $touch = $pdo->prepare('UPDATE rvgame_sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE id = ?');
         $touch->execute([(int) $id]);
         return (int) $id;
+    }
+
+    public static function analyticsExcluded(PDO $pdo, int $sessionId): bool
+    {
+        $query = $pdo->prepare('SELECT analytics_excluded FROM rvgame_sessions WHERE id = ?');
+        $query->execute([$sessionId]);
+        $excluded = $query->fetchColumn();
+        if ($excluded === false) throw new RuntimeException('Analytics session does not exist.');
+        return (bool) $excluded;
+    }
+
+    public static function markBrowserExcluded(): void
+    {
+        // This is an analytics opt-out, never an authentication credential.
+        setcookie('rvgame_owner_testing', '1', [
+            'expires' => time() + 31536000, 'path' => '/RVGame',
+            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+            'httponly' => true, 'samesite' => 'Strict',
+        ]);
+        $_COOKIE['rvgame_owner_testing'] = '1';
+    }
+
+    public static function excludeOwnerBrowser(PDO $pdo): void
+    {
+        self::markBrowserExcluded();
+        foreach (['main' => 'rvgame_session', 'ot' => 'rvgame_ot_session'] as $channel => $cookie) {
+            $token = $_COOKIE[$cookie] ?? '';
+            if (!is_string($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) continue;
+            $query = $pdo->prepare('SELECT id, analytics_excluded FROM rvgame_sessions WHERE channel = ? AND token_hash = ?');
+            $query->execute([$channel, hash('sha256', $token, true)]);
+            $session = $query->fetch();
+            if ($session !== false && !(bool) $session['analytics_excluded']) self::excludeSession($pdo, (int) $session['id']);
+        }
+    }
+
+    public static function excludeSession(PDO $pdo, int $sessionId): array
+    {
+        if ($pdo->inTransaction()) throw new RuntimeException('Owner exclusion requires its own transaction.');
+        $pdo->beginTransaction();
+        try {
+            $lock = $pdo->prepare('SELECT id FROM rvgame_sessions WHERE id = ? FOR UPDATE');
+            $lock->execute([$sessionId]);
+            if ($lock->fetchColumn() === false) throw new RuntimeException('Owner session does not exist.');
+            $update = $pdo->prepare('UPDATE rvgame_sessions SET analytics_excluded = 1 WHERE id = ?');
+            $update->execute([$sessionId]);
+            $removed = [];
+            foreach (['rvgame_analytics_events', 'rvgame_analytics_visits', 'rvgame_feedback', 'rvgame_ratings'] as $table) {
+                $delete = $pdo->prepare("DELETE FROM $table WHERE session_id = ?");
+                $delete->execute([$sessionId]);
+                $removed[$table] = $delete->rowCount();
+            }
+            $pdo->commit();
+            return $removed;
+        } catch (Throwable $error) {
+            $pdo->rollBack();
+            throw $error;
+        }
     }
 }

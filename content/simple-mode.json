@@ -1,5 +1,6 @@
 {
-  "contentVersion": "simple-1.2.0",
+  "contentVersion": "simple-2.0.0",
+  "releaseId": "rvgame-0.6.0",
   "rulesetId": "simple-1",
   "workingTitle": "RVGame",
   "titleProvisional": true,
@@ -12,6 +13,7 @@
     "homeLocationId": "maple-junction",
     "towVehicleName": "Bluebird",
     "towVehicleOdometerKm": 126400,
+    "towVehicleMaxTrailerWeightKg": 2800,
     "cashCents": 150000,
     "loanPrincipalCents": 200000,
     "starterPurchaseCents": 350000,
@@ -58,27 +60,60 @@
   },
   "work": {
     "grossCents": 22000,
-    "hours": 8
+    "hours": 8,
+    "startHour": 8,
+    "lastStartHour": 15
   },
   "market": {
     "waitHours": 4,
-    "saleHours": 2
+    "saleHours": 2,
+    "offerLifetimeHours": 48,
+    "listingLifetimeHours": 96,
+    "listingsPerLocation": 1,
+    "historySnapshots": 4,
+    "eventChancePercent": 42
   },
+  "weight": {
+    "looseLoadStepKg": 25,
+    "maximumLooseLoadKg": 200,
+    "tankServiceHours": 1,
+    "freshWaterCentsPerLitre": 20,
+    "wasteDumpCostCents": 1500
+  },
+  "marketTags": {
+    "compact": "compact campers",
+    "family": "family layouts",
+    "off-grid": "off-grid setups",
+    "project": "fixer-upper projects"
+  },
+  "marketPhases": [
+    {"label": "Family weekend demand", "demandDeltaBps": {"compact": 0, "family": 900, "off-grid": 100, "project": -300}, "serviceDeltaBps": 100},
+    {"label": "Compact travel season", "demandDeltaBps": {"compact": 1000, "family": -200, "off-grid": 200, "project": 0}, "serviceDeltaBps": 300},
+    {"label": "Backroad preparation", "demandDeltaBps": {"compact": 100, "family": 100, "off-grid": 1100, "project": -100}, "serviceDeltaBps": 600},
+    {"label": "Project bargain week", "demandDeltaBps": {"compact": -200, "family": -300, "off-grid": 0, "project": 1000}, "serviceDeltaBps": -200}
+  ],
   "goal": {
     "minimumReserveCents": 50000,
     "minimumHudState": "LOOKS_OK",
     "requiredSystems": ["running-gear", "shell", "plumbing"]
   },
   "locations": [
-    {"id": "sunset-shores", "name": "Sunset Shores", "x": 84, "y": 18, "service": true},
-    {"id": "pine-lake", "name": "Pine Lake", "x": 60, "y": 34, "service": true},
-    {"id": "cedar-ridge", "name": "Cedar Ridge", "x": 37, "y": 49, "service": false},
-    {"id": "maple-junction", "name": "Maple Junction", "x": 14, "y": 69, "service": true}
+    {"id": "sunset-shores", "name": "Sunset Shores", "x": 84, "y": 18, "service": true, "job": {"employer": "Sunset Shores park host", "task": "Clean a rental trailer for arriving guests"}, "technician": {"name": "Shoreline Mobile RV", "available": true, "priceBps": 10500}, "water": {"freshFill": true, "wasteDump": false}, "market": {"askBps": 9500, "demandBps": {"compact": 10500, "family": 9600, "off-grid": 9800, "project": 10300}, "intelContact": "Mara at the park office", "intelCostCents": 2500}},
+    {"id": "pine-lake", "name": "Pine Lake", "x": 62, "y": 32, "service": true, "job": {"employer": "Pine Lake canoe outfitter", "task": "Clean and stack returned rental equipment"}, "technician": {"name": "Pine Lake Trailer Service", "available": true, "priceBps": 11200}, "water": {"freshFill": true, "wasteDump": true}, "market": {"askBps": 10200, "demandBps": {"compact": 10100, "family": 11000, "off-grid": 10500, "project": 9300}, "intelContact": "Jonah at the launch", "intelCostCents": 3200}},
+    {"id": "cedar-ridge", "name": "Cedar Ridge", "x": 39, "y": 48, "service": false, "job": {"employer": "Cedar Ridge general store", "task": "Sort a delivery and restock the shelves"}, "technician": {"name": "No local technician", "available": false, "priceBps": 0}, "water": {"freshFill": false, "wasteDump": false}, "market": {"askBps": 9000, "demandBps": {"compact": 9900, "family": 9000, "off-grid": 10400, "project": 11400}, "intelContact": "Nell at the general store", "intelCostCents": 1800}},
+    {"id": "birch-crossing", "name": "Birch Crossing", "x": 41, "y": 24, "service": true, "job": {"employer": "Birch Crossing farm stand", "task": "Pack produce boxes for the evening pickup"}, "technician": {"name": "Birch Road Call-Out", "available": true, "priceBps": 12000}, "water": {"freshFill": true, "wasteDump": false}, "market": {"askBps": 9700, "demandBps": {"compact": 10900, "family": 9700, "off-grid": 11200, "project": 9800}, "intelContact": "Eli at the farm stand", "intelCostCents": 2800}},
+    {"id": "riverbend", "name": "Riverbend", "x": 27, "y": 54, "service": true, "job": {"employer": "Riverbend marina", "task": "Prepare rental slips and sweep the dock office"}, "technician": {"name": "Riverbend Camper Works", "available": true, "priceBps": 10800}, "water": {"freshFill": true, "wasteDump": true}, "market": {"askBps": 10400, "demandBps": {"compact": 9700, "family": 11200, "off-grid": 10100, "project": 10600}, "intelContact": "Sasha at the marina", "intelCostCents": 3000}},
+    {"id": "maple-junction", "name": "Maple Junction", "x": 14, "y": 69, "service": true, "job": {"employer": "Maple Junction garage manager", "task": "Clean the workshop and prepare a customer trailer"}, "technician": {"name": "Maple Junction RV Garage", "available": true, "priceBps": 9500}, "water": {"freshFill": true, "wasteDump": true}, "market": {"askBps": 10000, "demandBps": {"compact": 10200, "family": 10300, "off-grid": 9900, "project": 10100}, "intelContact": "Bea at the garage desk", "intelCostCents": 2200}}
   ],
   "routes": [
     {"id": "sunset-pine", "a": "sunset-shores", "b": "pine-lake", "distanceKm": 88, "towCostCents": 5400, "soloCostCents": 3900, "towHours": 2, "soloHours": 1},
     {"id": "pine-cedar", "a": "pine-lake", "b": "cedar-ridge", "distanceKm": 72, "towCostCents": 4600, "soloCostCents": 3300, "towHours": 2, "soloHours": 1},
-    {"id": "cedar-maple", "a": "cedar-ridge", "b": "maple-junction", "distanceKm": 46, "towCostCents": 3600, "soloCostCents": 2600, "towHours": 1, "soloHours": 1}
+    {"id": "cedar-maple", "a": "cedar-ridge", "b": "maple-junction", "distanceKm": 46, "towCostCents": 3600, "soloCostCents": 2600, "towHours": 1, "soloHours": 1},
+    {"id": "pine-birch", "a": "pine-lake", "b": "birch-crossing", "distanceKm": 54, "towCostCents": 3000, "soloCostCents": 2200, "towHours": 2, "soloHours": 1},
+    {"id": "birch-maple", "a": "birch-crossing", "b": "maple-junction", "distanceKm": 96, "towCostCents": 4100, "soloCostCents": 3000, "towHours": 3, "soloHours": 2},
+    {"id": "cedar-river", "a": "cedar-ridge", "b": "riverbend", "distanceKm": 52, "towCostCents": 2800, "soloCostCents": 2000, "towHours": 2, "soloHours": 1},
+    {"id": "river-maple", "a": "riverbend", "b": "maple-junction", "distanceKm": 62, "towCostCents": 3300, "soloCostCents": 2400, "towHours": 2, "soloHours": 1},
+    {"id": "pine-river", "a": "pine-lake", "b": "riverbend", "distanceKm": 91, "towCostCents": 4000, "soloCostCents": 2900, "towHours": 3, "soloHours": 2}
   ],
   "systems": [
     {"id": "running-gear", "label": "Running Gear and Towing"},
@@ -91,7 +126,7 @@
     {"id": "interior", "label": "Interior and Presentation"}
   ],
   "repairs": [
-    {"id": "preventive-tire-service", "label": "Preventive tire service", "systemId": "running-gear", "technicianCostCents": 7000, "technicianHours": 3, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
+    {"id": "preventive-tire-service", "label": "Workshop tire service", "systemId": "running-gear", "technicianCostCents": 7000, "technicianHours": 3, "diyAllowed": false, "diyHours": null, "serviceAnywhere": false},
     {"id": "roadside-tire-service", "label": "Roadside tire service", "systemId": "running-gear", "technicianCostCents": 9000, "technicianHours": 3, "diyAllowed": false, "diyHours": null, "serviceAnywhere": true},
     {"id": "seal-refresh", "label": "Roof and seal refresh", "systemId": "shell", "technicianCostCents": 18000, "technicianHours": 4, "diyAllowed": true, "diyHours": 6, "serviceAnywhere": false},
     {"id": "battery-service", "label": "Battery and charging service", "systemId": "dc-12v", "technicianCostCents": 26000, "technicianHours": 3, "diyAllowed": true, "diyHours": 4, "serviceAnywhere": false},
@@ -102,7 +137,9 @@
     {"id": "interior-refresh", "label": "Interior refresh", "systemId": "interior", "technicianCostCents": 12000, "technicianHours": 5, "diyAllowed": true, "diyHours": 8, "serviceAnywhere": false}
   ],
   "upgrades": [
-    {"id": "cozy-nook", "label": "Cozy nook package", "costCents": 25000, "valueCents": 15000, "hours": 6, "requiresSystemId": "interior"}
+    {"id": "cozy-nook", "label": "Cozy nook package", "costCents": 25000, "valueCents": 15000, "weightKg": 45, "appealTags": ["family"], "hours": 6, "requiresSystemId": "interior", "description": "Refresh the seating nook for family-buyer appeal. Adds G$150 and 45 kg; it may not recover its G$250 cost. Relist after installation."},
+    {"id": "weekend-solar", "label": "Weekend solar package", "costCents": 42000, "valueCents": 30000, "weightKg": 55, "appealTags": ["off-grid"], "hours": 8, "requiresSystemId": "dc-12v", "description": "Add a modest fictional solar package. Adds G$300, 55 kg and off-grid appeal; specialist electrical details are intentionally abstracted."},
+    {"id": "compact-storage", "label": "Compact storage refresh", "costCents": 18000, "valueCents": 12000, "weightKg": 25, "appealTags": ["compact"], "hours": 5, "requiresSystemId": "interior", "description": "Install tidy lightweight storage. Adds G$120, 25 kg and compact-camper appeal."}
   ],
   "camperTemplates": [
     {
@@ -112,6 +149,13 @@
       "soundValueCents": 500000,
       "unlockAfterSales": 0,
       "dream": false,
+      "tags": ["project", "compact"],
+      "sellerClaims": ["The seller says it towed fine last summer.", "A brief walk-around found nothing obvious."],
+      "dryWeightKg": 1750,
+      "grossVehicleWeightRatingKg": 2500,
+      "tankCapacitiesLitres": {"fresh": 140, "grey": 90, "black": 70},
+      "startingTankLitres": {"fresh": 90, "grey": 35, "black": 20},
+      "startingLooseLoadKg": 75,
       "defects": [
         {"id": "uneven-tire-wear", "systemId": "running-gear", "severity": "major", "penaltyCents": 60000, "known": false, "inspectionTier": "technician", "towingBlockerAfterKm": 150},
         {"id": "tired-roof-seals", "systemId": "shell", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "self"},
@@ -123,11 +167,75 @@
       "name": "Pocket Pine 17",
       "askCents": 400000,
       "soundValueCents": 720000,
-      "unlockAfterSales": 1,
+      "unlockAfterSales": 0,
       "dream": false,
+      "tags": ["compact", "project"],
+      "sellerClaims": ["Easy to place on smaller sites.", "The upholstery shows its age, but everything else is said to be usable."],
+      "dryWeightKg": 1580,
+      "grossVehicleWeightRatingKg": 2200,
+      "tankCapacitiesLitres": {"fresh": 110, "grey": 75, "black": 60},
+      "startingTankLitres": {"fresh": 30, "grey": 20, "black": 10},
+      "startingLooseLoadKg": 50,
       "defects": [
         {"id": "window-seal-leak", "systemId": "shell", "severity": "major", "penaltyCents": 90000, "known": false, "inspectionTier": "self"},
         {"id": "worn-upholstery", "systemId": "interior", "severity": "minor", "penaltyCents": 25000, "known": true, "inspectionTier": "self"}
+      ]
+    },
+    {
+      "id": "trailbird-16",
+      "name": "Trailbird 16",
+      "askCents": 320000,
+      "soundValueCents": 560000,
+      "unlockAfterSales": 0,
+      "dream": false,
+      "tags": ["compact", "project"],
+      "sellerClaims": ["Light, simple and ready for a weekend.", "The owner admits the converter can be temperamental."],
+      "dryWeightKg": 1420,
+      "grossVehicleWeightRatingKg": 2000,
+      "tankCapacitiesLitres": {"fresh": 95, "grey": 60, "black": 50},
+      "startingTankLitres": {"fresh": 70, "grey": 15, "black": 10},
+      "startingLooseLoadKg": 100,
+      "defects": [
+        {"id": "intermittent-converter", "systemId": "dc-12v", "severity": "major", "penaltyCents": 85000, "known": false, "inspectionTier": "technician"},
+        {"id": "scuffed-cabinet-doors", "systemId": "interior", "severity": "minor", "penaltyCents": 20000, "known": true, "inspectionTier": "self"}
+      ]
+    },
+    {
+      "id": "northwind-21",
+      "name": "Northwind 21",
+      "askCents": 470000,
+      "soundValueCents": 810000,
+      "unlockAfterSales": 0,
+      "dream": false,
+      "tags": ["family", "off-grid"],
+      "sellerClaims": ["Roomy enough for a family trip.", "The seller says the battery was replaced recently."],
+      "dryWeightKg": 2180,
+      "grossVehicleWeightRatingKg": 2900,
+      "tankCapacitiesLitres": {"fresh": 180, "grey": 120, "black": 90},
+      "startingTankLitres": {"fresh": 170, "grey": 70, "black": 45},
+      "startingLooseLoadKg": 180,
+      "defects": [
+        {"id": "soft-entry-floor", "systemId": "shell", "severity": "major", "penaltyCents": 105000, "known": false, "inspectionTier": "self"},
+        {"id": "weak-charge-cycle", "systemId": "dc-12v", "severity": "minor", "penaltyCents": 35000, "known": false, "inspectionTier": "technician"}
+      ]
+    },
+    {
+      "id": "river-rest-20",
+      "name": "River Rest 20",
+      "askCents": 440000,
+      "soundValueCents": 760000,
+      "unlockAfterSales": 0,
+      "dream": false,
+      "tags": ["family", "project"],
+      "sellerClaims": ["A comfortable layout with a few cosmetic jobs left.", "The water system was winterized, according to the seller."],
+      "dryWeightKg": 1920,
+      "grossVehicleWeightRatingKg": 2700,
+      "tankCapacitiesLitres": {"fresh": 150, "grey": 100, "black": 80},
+      "startingTankLitres": {"fresh": 40, "grey": 25, "black": 15},
+      "startingLooseLoadKg": 90,
+      "defects": [
+        {"id": "slow-grey-valve", "systemId": "plumbing", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "self"},
+        {"id": "dated-cushions", "systemId": "interior", "severity": "minor", "penaltyCents": 25000, "known": true, "inspectionTier": "self"}
       ]
     },
     {
@@ -137,18 +245,57 @@
       "soundValueCents": 900000,
       "unlockAfterSales": 2,
       "dream": true,
+      "tags": ["family", "off-grid"],
+      "sellerClaims": ["A cared-for camper ready for a long stay.", "The water pump occasionally needs a second try."],
+      "dryWeightKg": 2220,
+      "grossVehicleWeightRatingKg": 3000,
+      "tankCapacitiesLitres": {"fresh": 190, "grey": 125, "black": 95},
+      "startingTankLitres": {"fresh": 120, "grey": 45, "black": 30},
+      "startingLooseLoadKg": 110,
       "defects": [
         {"id": "sticky-water-pump", "systemId": "plumbing", "severity": "minor", "penaltyCents": 30000, "known": false, "inspectionTier": "self"}
       ]
     }
   ],
   "buyers": [
-    {"id": "project-hunter", "name": "Project Hunter", "factorBps": 8200, "acceptsMajorDefects": true},
-    {"id": "weekend-buyer", "name": "Weekend Buyer", "factorBps": 10000, "acceptsMajorDefects": false}
+    {"id": "project-hunter", "name": "Project Hunter", "factorBps": 8200, "acceptsMajorDefects": true, "preferredTags": ["project"], "fitReason": "They accept honest fixer-uppers but price every unresolved fault."},
+    {"id": "weekend-buyer", "name": "Weekend Buyer", "factorBps": 10000, "acceptsMajorDefects": false, "preferredTags": ["compact"], "fitReason": "They value manageable campers with no known major fault."},
+    {"id": "family-tourer", "name": "Family Tourer", "factorBps": 10300, "acceptsMajorDefects": false, "preferredTags": ["family"], "fitReason": "They will pay more for a family layout that presents well."},
+    {"id": "backroad-planner", "name": "Backroad Planner", "factorBps": 10100, "acceptsMajorDefects": false, "preferredTags": ["off-grid"], "fitReason": "They watch off-grid demand and useful upgrades closely."}
   ],
   "events": [
-    {"id": "parts-tip", "label": "A neighboring camper shares a parts tip.", "cashDeltaCents": 4000},
-    {"id": "rain-check", "label": "Rain taps the roof but reveals no new damage.", "cashDeltaCents": 0},
-    {"id": "odd-job-tip", "label": "A campground host points out tomorrow's work board.", "cashDeltaCents": 0}
+    {"id": "rough-road-rattle", "title": "A rough-road rattle", "text": "A vibration becomes noticeable after the last tow. You need to choose how cautiously to respond.", "triggerActions": ["travel"], "requiresCamper": true, "requiresUnresolvedSystemId": "running-gear", "choices": [
+      {"id": "slow-check", "label": "Stop and make a cautious check", "preview": "Spend 2 hours and reveal any unresolved running-gear fault your current evidence can support.", "hours": 2, "effects": {"revealSystemId": "running-gear"}, "outcome": "You stopped, slowed the schedule and checked the running gear before continuing."},
+      {"id": "call-help", "label": "Call roadside help", "preview": "Pay G$60 and spend 1 hour for a professional roadside check; any running-gear fault becomes known.", "hours": 1, "cashCostCents": 6000, "effects": {"revealSystemId": "running-gear"}, "outcome": "Roadside help identified the running-gear evidence without performing a repair."},
+      {"id": "recover", "label": "Recover the camper to Maple Junction", "preview": "Use commercial recovery. It adds the normal disclosed recovery payable, takes 6 hours and repairs nothing.", "hours": 6, "effects": {"recoverHome": true}, "outcome": "Recovery brought the camper to Maple Junction. The underlying fault remains."}
+    ]},
+    {"id": "weather-front", "title": "Weather closes in", "text": "A heavy weather front makes the next stretch unpleasant but still manageable.", "triggerActions": ["travel"], "requiresCamper": false, "choices": [
+      {"id": "wait", "label": "Wait for the worst to pass", "preview": "Spend 3 hours without another travel charge.", "hours": 3, "effects": {}, "outcome": "You waited under cover until the worst of the weather moved through."},
+      {"id": "cautious-progress", "label": "Continue cautiously", "preview": "Spend 1 extra hour and G$20 in additional travel cost.", "hours": 1, "cashCostCents": 2000, "effects": {}, "outcome": "You continued cautiously and paid the extra travel cost."}
+    ]},
+    {"id": "service-opening", "title": "A service opening", "text": "A local technician has a short-notice cancellation.", "triggerActions": ["travel", "inspect", "work"], "requiresTechnician": true, "choices": [
+      {"id": "reserve", "label": "Reserve the opening", "preview": "Pay G$25 now for a G$60 credit on your next technician repair or inspection.", "hours": 0, "cashCostCents": 2500, "effects": {"technicianCreditCents": 6000}, "outcome": "The technician recorded your deposit and a G$60 service credit."},
+      {"id": "pass", "label": "Pass", "preview": "Keep your cash and continue.", "hours": 0, "effects": {}, "outcome": "You passed on the short-notice opening."}
+    ]},
+    {"id": "buyer-lead", "title": "A buyer lead calls", "text": "Someone nearby knows a buyer whose priorities match this kind of camper.", "triggerActions": ["wait", "repair", "upgrade"], "requiresCamper": true, "requiresAd": true, "choices": [
+      {"id": "follow-up", "label": "Follow up on the lead", "preview": "Spend 1 hour. The current or next offer gains a 5% lead bonus and records why.", "hours": 1, "effects": {"offerBonusBps": 500}, "outcome": "You followed the lead and strengthened the buyer's interest."},
+      {"id": "skip", "label": "Skip the lead", "preview": "Make no change and spend no time.", "hours": 0, "effects": {}, "outcome": "You left the lead alone and kept the existing market terms."}
+    ]},
+    {"id": "market-whisper", "title": "A useful market whisper", "text": "A local contact offers a specific forecast about tomorrow's camper demand and service prices.", "triggerActions": ["travel", "work", "wait"], "requiresCamper": false, "choices": [
+      {"id": "buy-tip", "label": "Buy the forecast", "preview": "Pay this location's displayed intelligence price and save the exact next-day forecast.", "hours": 0, "effects": {"forecast": true}, "outcome": "The contact gave you a dated forecast tied to this location's scheduled market."},
+      {"id": "decline", "label": "Decline", "preview": "Keep your cash and accept the uncertainty.", "hours": 0, "effects": {}, "outcome": "You declined the forecast."}
+    ]},
+    {"id": "quick-help", "title": "Two-hour helping hand", "text": "A nearby business needs immediate help before closing.", "triggerActions": ["travel", "wait", "rest"], "requiresCamper": false, "choices": [
+      {"id": "help", "label": "Take the quick job", "preview": "Spend 2 hours and receive G$65 when finished.", "hours": 2, "effects": {"cashGainCents": 6500}, "outcome": "You finished the quick job and were paid G$65."},
+      {"id": "continue", "label": "Continue your plan", "preview": "Spend no time and receive no pay.", "hours": 0, "effects": {}, "outcome": "You continued with the plan you already had."}
+    ]},
+    {"id": "quiet-overlook", "title": "A quiet overlook", "text": "The road opens onto a calm view and a safe place to pause.", "triggerActions": ["travel"], "requiresCamper": false, "choices": [
+      {"id": "pause", "label": "Stop for the view", "preview": "Spend 1 hour. No money or condition changes.", "hours": 1, "effects": {}, "outcome": "You took an hour at the overlook and returned to the road clear-headed."},
+      {"id": "keep-moving", "label": "Keep moving", "preview": "Spend no additional time.", "hours": 0, "effects": {}, "outcome": "You kept moving while the light was good."}
+    ]},
+    {"id": "useful-spares", "title": "Useful spare supplies", "text": "A campground host offers leftover general-purpose supplies that can offset future technician work.", "triggerActions": ["work", "travel"], "requiresCamper": false, "choices": [
+      {"id": "sort-supplies", "label": "Sort and keep the useful supplies", "preview": "Spend 1 hour and gain a G$30 credit on the next technician service.", "hours": 1, "effects": {"technicianCreditCents": 3000}, "outcome": "You sorted the useful supplies and set them aside for the next technician service."},
+      {"id": "leave-them", "label": "Leave them for someone else", "preview": "Spend no time and take nothing.", "hours": 0, "effects": {}, "outcome": "You left the supplies for the next traveler."}
+    ]}
   ]
 }

@@ -4,7 +4,7 @@ import type { CommunitySummary } from './types';
 const trigger = document.createElement('button');
 trigger.type = 'button';
 trigger.className = 'rvgame-community-trigger';
-trigger.textContent = 'Rate / feedback';
+trigger.textContent = 'Help improve RVGame';
 
 const dialog = document.createElement('dialog');
 dialog.className = 'rvgame-community-dialog';
@@ -59,17 +59,22 @@ const summary = dialog.querySelector('.rvgame-rating-summary') as HTMLParagraphE
 const ratingButtons = dialog.querySelector('.rvgame-rating-buttons') as HTMLDivElement;
 const status = dialog.querySelector('.rvgame-community-status') as HTMLParagraphElement;
 let loaded = false;
+let ownerExcluded = false;
 
 dialog.querySelector('.rvgame-community-close')?.addEventListener('click', () => dialog.close());
 
 function renderRatings(data: CommunitySummary): void {
+  ownerExcluded = data.ownerExcluded;
   summary.textContent = data.ratingCount === 0
     ? 'No ratings yet.'
     : `${data.averageRating}/5 from ${data.ratingCount} player${data.ratingCount === 1 ? '' : 's'}.`;
+  if (ownerExcluded) summary.textContent += ' Owner testing is excluded from all metrics. Your ratings and feedback are disabled.';
+  for (const control of form.querySelectorAll<HTMLButtonElement | HTMLTextAreaElement | HTMLSelectElement>('.rvgame-feedback-submit, textarea, select')) control.disabled = ownerExcluded;
   ratingButtons.replaceChildren();
   for (let rating = 1; rating <= 5; rating += 1) {
     const choice = document.createElement('button');
     choice.type = 'button';
+    choice.disabled = ownerExcluded;
     choice.textContent = `${rating}/5`;
     choice.setAttribute('aria-pressed', String(data.userRating === rating));
     choice.addEventListener('click', async () => {

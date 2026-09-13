@@ -1,4 +1,4 @@
-const shareUrl = new URL('/RVGame/', window.location.origin).href;
+const shareUrl = new URL('/RVGame/?new=1', window.location.origin).href;
 const shareTitle = 'RVGame';
 const shareText = 'Try this camper reseller journey game.';
 
@@ -97,9 +97,9 @@ if (!navigator.share) {
       await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
       statusMessage.textContent = 'Shared.';
     } catch (error) {
-      if (!(error instanceof DOMException && error.name === 'AbortError')) {
-        statusMessage.textContent = 'The share sheet could not open. Choose an option above instead.';
-      }
+      statusMessage.textContent = error instanceof DOMException && error.name === 'AbortError'
+        ? 'Sharing cancelled. You can copy the link instead.'
+        : 'The share sheet could not open. Choose an option above instead.';
     }
   });
 }
